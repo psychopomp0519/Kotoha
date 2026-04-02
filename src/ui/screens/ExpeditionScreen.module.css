@@ -18,7 +18,7 @@
 .label {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
 }
 
 .selector {
@@ -33,6 +33,7 @@
   background: var(--color-bg);
   cursor: pointer;
   transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
 }
 
 .selectorButton:hover {
@@ -51,6 +52,7 @@
   border-color: var(--color-accent-hover);
 }
 
+/* Party slots */
 .partySlots {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -58,7 +60,6 @@
 }
 
 .partySlot {
-  aspect-ratio: 3 / 4;
   border: 1px dashed var(--color-border);
   display: flex;
   align-items: center;
@@ -66,13 +67,20 @@
   background: var(--color-bg);
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast);
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-sm);
   text-align: center;
+  min-height: 100px;
 }
 
 .partySlot:hover {
   border-color: var(--color-accent);
   background: var(--color-bg-dark);
+}
+
+.partySlotPicking {
+  border-color: var(--color-accent);
+  border-style: solid;
+  background: rgba(139, 37, 0, 0.05);
 }
 
 .partySlotEmpty {
@@ -83,11 +91,13 @@
 
 .partySlotFilled {
   border-style: solid;
+  border-color: var(--color-border);
 }
 
 .slotName {
   font-weight: 700;
   font-size: var(--font-size-sm);
+  margin-bottom: 2px;
 }
 
 .slotClass {
@@ -100,10 +110,76 @@
   font-size: var(--font-size-sm);
 }
 
+.slotHint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.partySlotFilled:hover .slotHint {
+  opacity: 1;
+}
+
+/* Adventurer picker */
+.adventurerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.adventurerCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.adventurerCard:hover {
+  background: var(--color-bg-dark);
+  border-color: var(--color-accent);
+}
+
+.cardName {
+  font-weight: 700;
+}
+
+.cardInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-stat);
+}
+
+.cancelButton {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+}
+
+.emptyMessage {
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: var(--spacing-md) 0;
+}
+
+/* Footer */
 .estimatedTime {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-md);
+}
+
+.buttonRow {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 .primaryButton {
@@ -124,6 +200,20 @@
 .primaryButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.secondaryButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
 }
 
 @media (max-width: 1023px) {
