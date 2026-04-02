@@ -63,67 +63,62 @@ export function App() {
   // Initialize game: load save or start new game, then start loop
   useEffect(() => {
     let mounted = true;
+    let autoSaveId: ReturnType<typeof setInterval> | null = null;
 
     async function init() {
       try {
         const saved = await loadGame();
         if (saved && saved.seed != null) {
-          // Calculate offline time before restoring state
-          const savedTick = saved.currentTick ?? 0;
-          const now = Math.floor(Date.now() / 1000);
-          const lastSaveTime = savedTick; // ticks approximate seconds
-
-          // Restore saved state (merge into store, preserving actions)
           useGameStore.setState(saved);
-
-          // Show absence report if offline time elapsed
-          // Estimate offline ticks from real-time difference
-          // (savedTick is game ticks; we use wall clock diff as proxy)
-          if (savedTick > 0) {
-            // A simple heuristic: if the save has a meaningful tick count,
-            // check if any expeditions were running. If so, show absence report.
-            const state = useGameStore.getState();
-            const completedExpeditions = state.expeditions.filter(
-              (e) => e.status === 'completed',
-            );
-            if (completedExpeditions.length > 0) {
-              // Estimate gains from completed expeditions
-              let totalXp = 0;
-              let totalGold = 0;
-              const materialSet = new Set<string>();
-
-              // Basic estimate: show a report for any offline progress
-              const elapsedTicks = Math.max(0, now - lastSaveTime);
-              if (elapsedTicks > 60) {
-                useUIStore.getState().openModal('absenceReport', {
-                  elapsedTicks,
-                  xpEarned: totalXp,
-                  goldEarned: totalGold,
-                  materialsFound: materialSet.size,
-                });
-              }
-            }
-          }
         } else {
           useGameStore.getState().newGame();
         }
       } catch {
-        // If load fails, start fresh
         useGameStore.getState().newGame();
       }
 
       if (mounted) {
         startGameLoop(useGameStore);
         setReady(true);
+
+        // Auto-save every 30 seconds
+        autoSaveId = setInterval(() => {
+          saveGame(useGameStore.getState());
+        }, 30_000);
       }
     }
 
+    // Save on tab close / refresh
+    function handleBeforeUnload() {
+      const state = useGameStore.getState();
+      // Use synchronous localStorage backup for beforeunload reliability
+      try {
+        const data: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(state)) {
+          if (typeof value === 'function') continue;
+          data[key] = value;
+        }
+        // Convert Set to array for JSON
+        if (data.events && typeof data.events === 'object') {
+          const events = data.events as Record<string, unknown>;
+          if (events.flags instanceof Set) {
+            data.events = { ...events, flags: Array.from(events.flags as Set<string>) };
+          }
+        }
+        localStorage.setItem('kotoha_save_backup', JSON.stringify(data));
+      } catch { /* best effort */ }
+      // Also fire async IndexedDB save (may or may not complete)
+      saveGame(state);
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
     init();
 
     return () => {
       mounted = false;
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (autoSaveId) clearInterval(autoSaveId);
       stopGameLoop();
-      // Save on unmount
       saveGame(useGameStore.getState());
     };
   }, []);

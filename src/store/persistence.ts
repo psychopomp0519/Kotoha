@@ -80,13 +80,26 @@ export async function saveGame(state: GameState): Promise<void> {
 }
 
 /**
- * Load game state from IndexedDB.
+ * Load game state from IndexedDB, falling back to localStorage backup.
  * Returns null if no save exists.
  */
 export async function loadGame(): Promise<Partial<GameState> | null> {
+  // Try IndexedDB first
   const raw = await idbGet<Record<string, unknown>>(SAVE_KEY);
-  if (!raw) return null;
-  return deserializeState(raw) as Partial<GameState>;
+  if (raw) return deserializeState(raw) as Partial<GameState>;
+
+  // Fallback: localStorage backup (set during beforeunload)
+  try {
+    const backup = localStorage.getItem('kotoha_save_backup');
+    if (backup) {
+      const parsed = JSON.parse(backup) as Record<string, unknown>;
+      if (parsed.seed != null) {
+        return deserializeState(parsed) as Partial<GameState>;
+      }
+    }
+  } catch { /* ignore parse errors */ }
+
+  return null;
 }
 
 // ---------------------------------------------------------------------------
