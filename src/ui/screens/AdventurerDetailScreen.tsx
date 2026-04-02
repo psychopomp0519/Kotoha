@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { useUIStore } from '../../store/uiStore';
 import { calcDerivedStats } from '../../engine/adventurer/StatCalc';
 import styles from './AdventurerDetailScreen.module.css';
 
@@ -12,7 +12,6 @@ const CLASS_LABELS: Record<string, string> = {
   kemono: '케모노',
 };
 
-const STAT_MAX = 30; // Display cap for stat bars
 const STAT_LABELS: Record<string, string> = {
   str: 'STR',
   spd: 'SPD',
@@ -37,40 +36,58 @@ function getMoraleClass(morale: number) {
 }
 
 export function AdventurerDetailScreen() {
-  const activeModal = useUIStore((s) => s.activeModal);
   const adventurers = useGameStore((s) => s.adventurers);
-  const closeModal = useUIStore((s) => s.closeModal);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Get adventurer ID from modal data, or fall back to the first adventurer
-  const modalData = activeModal?.data as { adventurerId?: string } | undefined;
-  const adventurerId = modalData?.adventurerId;
+  const selectedAdv = selectedId
+    ? adventurers.find((a) => a.id === selectedId)
+    : null;
 
-  const adv = adventurerId
-    ? adventurers.find((a) => a.id === adventurerId)
-    : adventurers[0];
-
-  if (!adv) {
+  // List view
+  if (!selectedAdv) {
     return (
       <div className={styles.container}>
-        <p>모험가를 찾을 수 없습니다.</p>
+        <h1 className={styles.pageTitle}>모험가</h1>
+        <div className={styles.adventurerList}>
+          {adventurers.map((adv) => (
+            <button
+              key={adv.id}
+              className={styles.adventurerCard}
+              onClick={() => setSelectedId(adv.id)}
+            >
+              <div className={styles.cardMain}>
+                <span className={styles.cardName}>{adv.name.family} {adv.name.given}</span>
+                <span className={styles.cardClass}>{CLASS_LABELS[adv.currentClass] ?? adv.currentClass}</span>
+              </div>
+              <div className={styles.cardRight}>
+                <span className={styles.cardLevel}>Lv.{adv.level}</span>
+                <span className={`${styles.cardMorale} ${getMoraleClass(adv.morale)}`}>
+                  사기 {adv.morale}
+                </span>
+                {adv.state !== 'idle' && (
+                  <span className={styles.cardState}>{adv.state === 'expedition' ? '원정 중' : adv.state}</span>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
 
+  // Detail view
+  const adv = selectedAdv;
   const fullNameKo = `${adv.name.family} ${adv.name.given}`;
-  const fullNameJp = `${adv.name.familyJp} ${adv.name.givenJp}`;
+  const fullNameJp = `${adv.name.familyJp ?? ''} ${adv.name.givenJp ?? ''}`.trim();
 
-  // Compute derived stats
   const statsForDerived = {
-    STR: adv.stats.str,
-    SPD: adv.stats.spd,
-    INT: adv.stats.int,
-    SPI: adv.stats.spi,
-    END: adv.stats.end,
+    STR: adv.stats.str, SPD: adv.stats.spd, INT: adv.stats.int,
+    SPI: adv.stats.spi, END: adv.stats.end,
   };
   const derived = calcDerivedStats(statsForDerived, adv.level);
 
-  // Equipment slots for display
+  const statMax = Math.max(adv.stats.str, adv.stats.spd, adv.stats.int, adv.stats.spi, adv.stats.end, 20);
+
   const equipSlots: Record<string, string | undefined> = {
     weapon: adv.equipment.weapon,
     head: adv.equipment.head,
@@ -82,9 +99,13 @@ export function AdventurerDetailScreen() {
 
   return (
     <div className={styles.container}>
+      <button className={styles.backButton} onClick={() => setSelectedId(null)}>
+        ← 목록으로
+      </button>
+
       <div className={styles.nameSection}>
         <div className={styles.nameKorean}>{fullNameKo}</div>
-        <div className={styles.nameJapanese}>{fullNameJp}</div>
+        {fullNameJp && <div className={styles.nameJapanese}>{fullNameJp}</div>}
       </div>
 
       <div className={styles.classLevel}>
@@ -92,6 +113,7 @@ export function AdventurerDetailScreen() {
           {CLASS_LABELS[adv.currentClass] ?? adv.currentClass}
         </span>
         <span className={styles.levelLabel}>Lv.{adv.level}</span>
+        <span className={styles.xpLabel}>XP: {adv.exp}</span>
       </div>
 
       <div className={styles.section}>
@@ -103,7 +125,7 @@ export function AdventurerDetailScreen() {
               <div className={styles.statBarContainer}>
                 <div
                   className={styles.statBarFill}
-                  style={{ width: `${Math.min((value / STAT_MAX) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((value / statMax) * 100, 100)}%` }}
                 />
               </div>
               <span className={styles.statValue}>{value}</span>
@@ -111,10 +133,15 @@ export function AdventurerDetailScreen() {
           ))}
         </div>
 
-        <div className={styles.statList} style={{ marginTop: '8px', fontSize: '0.85em', opacity: 0.8 }}>
-          <div>HP: {derived.maxHp} | 물리공: {derived.physAtk} | 마법공: {derived.magAtk}</div>
-          <div>물리방: {derived.physDef} | 마법방: {derived.magDef} | 회피: {derived.evasion}%</div>
-          <div>기력: {derived.kiMax} | 기력회복: {derived.kiRegen}/턴 | 치명: {derived.critRate}%</div>
+        <div className={styles.derivedStats}>
+          <span>HP {derived.maxHp}</span>
+          <span>물리공 {derived.physAtk}</span>
+          <span>마법공 {derived.magAtk}</span>
+          <span>물리방 {derived.physDef}</span>
+          <span>마법방 {derived.magDef}</span>
+          <span>회피 {derived.evasion}%</span>
+          <span>기력 {derived.kiMax}</span>
+          <span>치명 {derived.critRate}%</span>
         </div>
       </div>
 
@@ -124,7 +151,7 @@ export function AdventurerDetailScreen() {
           {Object.entries(equipSlots).map(([slot, item]) => (
             <div key={slot} className={styles.equipSlot}>
               <div className={styles.equipSlotLabel}>{EQUIP_SLOT_LABELS[slot]}</div>
-              <div className={styles.equipSlotEmpty}>{item ?? '비어 있음'}</div>
+              <div className={styles.equipSlotEmpty}>{item ?? '—'}</div>
             </div>
           ))}
         </div>
@@ -166,16 +193,6 @@ export function AdventurerDetailScreen() {
           )}
         </div>
       </div>
-
-      {activeModal?.type === 'adventurerDetail' && (
-        <button
-          className={styles.classLabel}
-          onClick={closeModal}
-          style={{ marginTop: '16px', cursor: 'pointer', padding: '8px 16px' }}
-        >
-          닫기
-        </button>
-      )}
     </div>
   );
 }

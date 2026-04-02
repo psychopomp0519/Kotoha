@@ -5,6 +5,105 @@
   width: 100%;
 }
 
+.pageTitle {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-lg);
+}
+
+.adventurerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.adventurerCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.adventurerCard:hover {
+  background: var(--color-bg-dark);
+  border-color: var(--color-accent);
+}
+
+.cardMain {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.cardName {
+  font-weight: 700;
+}
+
+.cardClass {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.cardRight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.cardLevel {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+}
+
+.cardMorale {
+  font-size: var(--font-size-sm);
+}
+
+.cardState {
+  font-size: 11px;
+  color: var(--color-bg);
+  background: var(--color-text-muted);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.backButton {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs) 0;
+}
+
+.backButton:hover {
+  color: var(--color-accent);
+}
+
+.xpLabel {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-left: var(--spacing-md);
+}
+
+.derivedStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm) var(--spacing-md);
+  margin-top: var(--spacing-sm);
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
 .nameSection {
   margin-bottom: var(--spacing-lg);
 }

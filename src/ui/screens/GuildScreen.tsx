@@ -44,7 +44,6 @@ export function GuildScreen() {
   const expeditions = useGameStore((s) => s.expeditions);
   const currentTick = useGameStore((s) => s.currentTick);
   const setScreen = useUIStore((s) => s.setScreen);
-  const openModal = useUIStore((s) => s.openModal);
 
   const activeExpeditions = expeditions.filter((e) => e.status === 'active');
   const completedExpeditions = expeditions.filter((e) => e.status === 'completed');
@@ -112,7 +111,7 @@ export function GuildScreen() {
               <div
                 key={adv.id}
                 className={styles.adventurerRow}
-                onClick={() => openModal('adventurerDetail', { adventurerId: adv.id })}
+                onClick={() => setScreen('adventurers')}
               >
                 <div className={styles.adventurerMain}>
                   <span className={styles.adventurerName}>

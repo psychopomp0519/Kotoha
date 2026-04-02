@@ -268,20 +268,20 @@ export const FACILITY_DISCOUNT_LOW = 0.6;   // Lv 1-3
 export const FACILITY_DISCOUNT_HIGH = 1.0;  // Lv 4+
 
 export const FACILITY_BASE_COSTS: Record<string, number> = {
-  blacksmith:  150,  // 대장간
+  smithy:      150,  // 대장간
   apothecary:  120,  // 약제실
   kitchen:      80,  // 주방
   dojo:        150,  // 도장
   talisman:    100,  // 부적방
   tearoom:      80,  // 다실
-  recruiter:   100,  // 모집소
-  lodging:     120,  // 숙소
-  warehouse:    80,  // 창고
+  recruit:     100,  // 모집소
+  quarters:    120,  // 숙소
+  storage:      80,  // 창고
   tavern:      100,  // 주점
   library:     120,  // 서재
   garden:       80,  // 정원
-  pet_den:     100,  // 펫 소굴
-  trading:     150,  // 교역소
+  kennel:      100,  // 펫 소굴
+  exchange:    150,  // 교역소
 };
 
 // ---------------------------------------------------------------------------

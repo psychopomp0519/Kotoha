@@ -183,7 +183,7 @@ export const TUTORIAL_ADVENTURERS: TutorialAdventurer[] = [
     givenName: '카에데',
     givenNameJp: 'かえで',
     givenKanji: '楓',
-    baseClass: 'yamabushi',
+    baseClass: 'miko',
   },
   {
     givenName: '렌',

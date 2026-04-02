@@ -1,25 +1,18 @@
 import { useUIStore } from '../../store/uiStore';
+import { useGameStore } from '../../store/gameStore';
 import styles from './EventModal.module.css';
 
 interface EventChoice {
   id: string;
   text: string;
+  effects?: { type: string; value: number | string }[];
 }
 
 interface EventModalData {
+  eventId?: string;
   narrative: string;
   choices: EventChoice[];
 }
-
-// Default mock data if none provided
-const DEFAULT_EVENT: EventModalData = {
-  narrative: '안개 속에서 희미한 목소리가 들려온다. 갈림길 앞에 서서, 모험가들은 선택을 해야 한다.',
-  choices: [
-    { id: 'left', text: '왼쪽 길을 택한다 — 안개가 더 짙다' },
-    { id: 'right', text: '오른쪽 길을 택한다 — 희미한 빛이 보인다' },
-    { id: 'wait', text: '잠시 기다리며 주위를 살핀다' },
-  ],
-};
 
 export function EventModal() {
   const activeModal = useUIStore((s) => s.activeModal);
@@ -27,10 +20,29 @@ export function EventModal() {
 
   if (!activeModal || activeModal.type !== 'event') return null;
 
-  const data = (activeModal.data as EventModalData | undefined) ?? DEFAULT_EVENT;
+  const data = activeModal.data as EventModalData | undefined;
+  if (!data) return null;
 
-  function handleChoice(_choiceId: string) {
-    // In the future this will dispatch to gameStore
+  function handleChoice(choice: EventChoice) {
+    // Apply effects
+    if (choice.effects) {
+      for (const effect of choice.effects) {
+        if (effect.type === 'gold' && typeof effect.value === 'number') {
+          useGameStore.getState().addGold(effect.value);
+        } else if (effect.type === 'item' && typeof effect.value === 'string') {
+          useGameStore.getState().addItem(effect.value, 1);
+        }
+      }
+    }
+
+    // Set event flag if eventId exists
+    if (data?.eventId) {
+      const state = useGameStore.getState();
+      if (state.events?.flags instanceof Set) {
+        state.events.flags.add(`${data.eventId}_${choice.id}`);
+      }
+    }
+
     closeModal();
   }
 
@@ -43,7 +55,7 @@ export function EventModal() {
             <button
               key={choice.id}
               className={styles.choiceButton}
-              onClick={() => handleChoice(choice.id)}
+              onClick={() => handleChoice(choice)}
             >
               {choice.text}
             </button>
