@@ -19,6 +19,7 @@ import type {
 } from '../core/types';
 import {
   CLASS_BASE_STATS,
+  CLASS_GROWTH_RATES,
   type ClassName,
   EXPEDITION_BASE_TICKS,
   SEASON,
@@ -26,6 +27,7 @@ import {
 import { TUTORIAL_ADVENTURERS } from '../data/names';
 import { generateCandidates, type RecruitCandidate } from '../engine/adventurer/Recruitment';
 import { processExpedition, calculateExpeditionTicks } from '../engine/expedition/ExpeditionEngine';
+import { xpRequired } from '../engine/adventurer/XpTable';
 
 // ---------------------------------------------------------------------------
 // Region ID list (ordered by index)
@@ -203,16 +205,105 @@ export const useGameStore = create<GameState>()((set, get) => ({
       const seasonIndex = Math.floor(newDayCount / SEASON.DAYS_PER_SEASON) % 4;
       const newSeason = SEASON.ORDER[seasonIndex];
 
-      // Check completed expeditions
-      const completedExpeditions: Expedition[] = [];
-      const activeExpeditions: Expedition[] = [];
+      // Check completed expeditions and auto-process them
+      const remainingExpeditions: Expedition[] = [];
+      let goldDelta = 0;
+      const itemsDelta: Record<string, number> = {};
+      const adventurerUpdates: Record<string, { expDelta: number; returnToIdle: boolean }> = {};
 
       for (const exp of state.expeditions) {
         if (exp.status === 'active' && nextTick >= exp.estimatedEndTick) {
-          completedExpeditions.push({ ...exp, status: 'completed' });
+          // Auto-complete: process expedition outcome
+          const regionIndex = REGION_IDS.indexOf(exp.region);
+          const outcome = processExpedition({
+            seed: state.seed ^ nextTick ^ regionIndex,
+            regionIndex,
+            depth: exp.depth,
+            expeditionCount: exp.completedRuns,
+            partyAverageSpd: 10,
+            isIdle: true,
+          });
+
+          // Accumulate rewards
+          goldDelta += outcome.totalGold;
+          const xpPerMember = Math.floor(outcome.totalXp / exp.partyIds.length);
+          for (const pid of exp.partyIds) {
+            const prev = adventurerUpdates[pid] ?? { expDelta: 0, returnToIdle: false };
+            prev.expDelta += xpPerMember;
+            prev.returnToIdle = true;
+            adventurerUpdates[pid] = prev;
+          }
+          for (const drop of outcome.drops) {
+            itemsDelta[drop.itemId] = (itemsDelta[drop.itemId] ?? 0) + drop.quantity;
+          }
+
+          // Keep as completed with result for combat log display
+          remainingExpeditions.push({
+            ...exp,
+            status: 'completed',
+            result: {
+              totalCombats: outcome.encounters.filter(e => e.type === 'combat').length,
+              wins: outcome.encounters.filter(e => e.result === 'victory').length,
+              losses: outcome.encounters.filter(e => e.result === 'defeat').length,
+              expGained: outcome.totalXp,
+              goldGained: outcome.totalGold,
+              itemsGained: outcome.drops,
+              adventurerStates: exp.partyIds.map(pid => ({
+                id: pid,
+                hpPercent: 100,
+                corruptionDelta: 0,
+                expGained: Math.floor(outcome.totalXp / exp.partyIds.length),
+              })),
+              eventsTriggered: [],
+              log: [],
+            },
+          });
         } else {
-          activeExpeditions.push(exp);
+          remainingExpeditions.push(exp);
         }
+      }
+
+      // Apply adventurer XP + level ups + return to idle
+      const updatedAdventurers = state.adventurers.map(a => {
+        const update = adventurerUpdates[a.id];
+        if (!update) return a;
+        let newExp = a.exp + update.expDelta;
+        let newLevel = a.level;
+        // Level-up check
+        while (newLevel < 99) {
+          const needed = xpRequired(newLevel);
+          if (needed <= 0 || newExp < needed) break;
+          newExp -= needed;
+          newLevel++;
+        }
+        // Recalculate stats if leveled up
+        let newStats = a.stats;
+        if (newLevel > a.level) {
+          const base = CLASS_BASE_STATS[a.currentClass as ClassName];
+          const growth = CLASS_GROWTH_RATES[a.currentClass as ClassName];
+          if (base && growth) {
+            newStats = {
+              str: Math.floor(base.STR + (newLevel - 1) * growth.STR),
+              spd: Math.floor(base.SPD + (newLevel - 1) * growth.SPD),
+              int: Math.floor(base.INT + (newLevel - 1) * growth.INT),
+              spi: Math.floor(base.SPI + (newLevel - 1) * growth.SPI),
+              end: Math.floor(base.END + (newLevel - 1) * growth.END),
+            };
+          }
+        }
+        return {
+          ...a,
+          exp: newExp,
+          level: newLevel,
+          stats: newStats,
+          state: update.returnToIdle ? 'idle' as const : a.state,
+        };
+      });
+
+      // Merge item drops
+      const newItems = { ...state.inventory.items };
+      for (const [itemId, qty] of Object.entries(itemsDelta)) {
+        newItems[itemId] = (newItems[itemId] ?? 0) + qty;
       }
 
       // Process facility queues
@@ -231,8 +322,14 @@ export const useGameStore = create<GameState>()((set, get) => ({
 
       return {
         currentTick: nextTick,
-        expeditions: [...activeExpeditions, ...completedExpeditions],
+        adventurers: updatedAdventurers,
+        expeditions: remainingExpeditions,
         facilities: updatedFacilities,
+        guild: {
+          ...state.guild,
+          gold: state.guild.gold + goldDelta,
+        },
+        inventory: { items: newItems },
         world: {
           ...state.world,
           dayCount: newDayCount,

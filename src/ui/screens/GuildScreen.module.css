@@ -54,6 +54,81 @@
   padding: var(--spacing-md);
 }
 
+/* Expedition cards */
+.expeditionCard {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  margin-bottom: var(--spacing-xs);
+}
+
+.expeditionInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
+.expeditionTime {
+  color: var(--color-text-muted);
+  font-family: var(--font-stat);
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--color-border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 1s linear;
+}
+
+.expeditionCardDone {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-wood);
+  background: rgba(74, 124, 63, 0.05);
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+}
+
+.expeditionComplete {
+  color: var(--color-wood);
+  font-weight: 700;
+}
+
+/* Adventurer list */
+.adventurerMain {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.adventurerStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.hpText {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  color: var(--color-wood);
+}
+
+.stateTag {
+  font-size: 11px;
+  color: var(--color-bg);
+  background: var(--color-text-muted);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
 .adventurerList {
   display: flex;
   flex-direction: column;
@@ -63,10 +138,11 @@
 .adventurerRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  justify-content: space-between;
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--color-border-light);
   background: var(--color-bg);
+  cursor: pointer;
   transition: background var(--transition-fast);
 }
 
