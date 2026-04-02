@@ -1,0 +1,86 @@
+.container {
+  padding: var(--spacing-lg);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-lg);
+}
+
+.logArea {
+  max-height: 60vh;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-light);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  background: var(--color-bg);
+}
+
+.logEntry {
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.logEntry:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.roundNumber {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-xs);
+  font-weight: 700;
+}
+
+.narrativeText {
+  font-style: italic;
+  color: var(--color-text-muted);
+  line-height: 2;
+}
+
+.resultSummary {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-md);
+  background: var(--color-bg-dark);
+}
+
+.resultTitle {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.resultVictory {
+  color: var(--color-wood);
+}
+
+.resultDefeat {
+  color: var(--color-fire);
+}
+
+.resultDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.resultItem {
+  font-size: var(--font-size-sm);
+}
+
+.resultLabel {
+  color: var(--color-text-muted);
+  margin-right: var(--spacing-xs);
+}
+
+.resultValue {
+  font-family: var(--font-stat);
+  font-weight: 700;
+}

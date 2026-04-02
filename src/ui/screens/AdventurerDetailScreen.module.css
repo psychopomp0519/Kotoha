@@ -1,0 +1,186 @@
+.container {
+  padding: var(--spacing-lg);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.nameSection {
+  margin-bottom: var(--spacing-lg);
+}
+
+.nameKorean {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.nameJapanese {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+}
+
+.classLevel {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+}
+
+.classLabel {
+  font-weight: 700;
+}
+
+.levelLabel {
+  font-family: var(--font-stat);
+  margin-left: var(--spacing-md);
+}
+
+.section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.statList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.statLabel {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  min-width: 36px;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.statBarContainer {
+  flex: 1;
+  max-width: 200px;
+  height: 10px;
+  background: var(--color-border-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.statBarFill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width var(--transition-normal);
+}
+
+.statValue {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  min-width: 30px;
+  text-align: right;
+}
+
+.equipmentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.equipSlot {
+  padding: var(--spacing-sm);
+  border: 1px dashed var(--color-border);
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.equipSlotLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.equipSlotEmpty {
+  font-size: var(--font-size-sm);
+  color: var(--color-border);
+  font-style: italic;
+}
+
+.skillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.skillTag {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-dark);
+}
+
+.moraleSection {
+  margin-bottom: var(--spacing-lg);
+}
+
+.moraleBarContainer {
+  height: 12px;
+  background: var(--color-border-light);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 300px;
+  margin-top: var(--spacing-xs);
+}
+
+.moraleBarFill {
+  height: 100%;
+  transition: width var(--transition-normal);
+}
+
+.moraleHigh {
+  background: var(--color-wood);
+}
+
+.moraleMid {
+  background: var(--color-earth);
+}
+
+.moraleLow {
+  background: var(--color-fire);
+}
+
+.moraleValue {
+  font-family: var(--font-stat);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
+}
+
+.traitList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.traitTag {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 1023px) {
+  .equipmentGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,184 @@
+.container {
+  padding: var(--spacing-lg);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.section {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-md);
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-border-light);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.speedButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.speedButton {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.speedButton:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.speedButtonActive {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+.speedButtonActive:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-bg);
+}
+
+.saveButtons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.actionButton {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.actionButton:hover {
+  background: var(--color-bg-dark);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.versionInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.dangerSection {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-md);
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-fire);
+}
+
+.dangerButton {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-fire);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-base);
+  color: var(--color-fire);
+  text-align: center;
+}
+
+.dangerButton:hover {
+  background: var(--color-fire);
+  color: var(--color-bg);
+}
+
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 36, 22, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: var(--spacing-lg);
+}
+
+.confirmCard {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  max-width: 400px;
+  width: 100%;
+  padding: var(--spacing-xl);
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(44, 36, 22, 0.2);
+}
+
+.confirmText {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+}
+
+.confirmActions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.confirmCancel {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.confirmCancel:hover {
+  border-color: var(--color-accent);
+}
+
+.confirmDanger {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-fire);
+  border: 1px solid var(--color-fire);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-bg);
+  transition: all var(--transition-fast);
+}
+
+.confirmDanger:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}

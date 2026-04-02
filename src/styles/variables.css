@@ -1,0 +1,65 @@
+:root {
+  /* Washi paper palette */
+  --color-bg: #f5f0e8;
+  --color-bg-dark: #e8e0d0;
+  --color-text: #2c2416;
+  --color-text-muted: #6b5d4f;
+  --color-accent: #8b2500;
+  --color-accent-hover: #a03000;
+  --color-border: #c4b8a8;
+  --color-border-light: #ddd4c4;
+
+  /* Element colors */
+  --color-wood: #4a7c3f;
+  --color-fire: #c43a31;
+  --color-earth: #b8860b;
+  --color-metal: #708090;
+  --color-water: #2e6b8a;
+
+  /* Rarity colors */
+  --color-rarity-normal: #6b5d4f;
+  --color-rarity-fine: #2e6b8a;
+  --color-rarity-rare: #6a3d9a;
+  --color-rarity-legendary: #b8860b;
+  --color-rarity-divine: #c43a31;
+
+  /* Typography */
+  --font-body: 'Noto Serif KR', 'Noto Serif JP', serif;
+  --font-stat: 'Courier New', monospace;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --line-height: 1.8;
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --content-max-width: 960px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Animation */
+  --transition-fast: 200ms ease;
+  --transition-normal: 400ms ease;
+
+  /* Season: Spring (default) */
+  --season-accent: #e8b4b8;
+  --season-bg-tint: rgba(232, 180, 184, 0.05);
+}
+
+/* Season overrides */
+[data-season="summer"] {
+  --season-accent: #4a9e6b;
+  --season-bg-tint: rgba(74, 158, 107, 0.05);
+}
+[data-season="autumn"] {
+  --season-accent: #c4752b;
+  --season-bg-tint: rgba(196, 117, 43, 0.05);
+}
+[data-season="winter"] {
+  --season-accent: #8bb4d6;
+  --season-bg-tint: rgba(139, 180, 214, 0.05);
+}

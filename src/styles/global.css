@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+@import './variables.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: var(--line-height);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+button:hover {
+  background: var(--color-bg-dark);
+  border-color: var(--color-accent);
+}
+
+button:active {
+  background: var(--color-border-light);
+}
+
+/* Stat numbers use monospace */
+.stat-value {
+  font-family: var(--font-stat);
+}
+
+/* Narrative text style */
+.narrative {
+  font-style: italic;
+  color: var(--color-text-muted);
+  line-height: 2;
+}
+
+/* Ink wash fade animation for events */
+@keyframes ink-wash-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.ink-wash-enter {
+  animation: ink-wash-in var(--transition-normal) ease-out;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  html {
+    font-size: var(--font-size-sm);
+  }
+}
